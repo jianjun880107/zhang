@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuangke.dao.UserDao">
+	<select id="logon" resultType="int" parameterType="com.kuangke.domain.User">
+		select count(1) count
+		from sys_user
+		where uesrName=#{uesrName}
+		and password=#{passWord}
+		and status='1'
+	</select>
+	
+	<select id="selectByUserName" resultType="int" parameterType="java.util.HashMap">
+		select count(1) count
+		from sys_user
+		where uesrName=#{userName}
+	</select>
+	
+	<insert id="insertUser" parameterType="java.util.HashMap">
+		INSERT sys_user(uesrName,PASSWORD,STATUS)VALUES(#{userName},#{passWord},'1')
+	</insert>
+</mapper>

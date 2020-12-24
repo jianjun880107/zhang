@@ -1,0 +1,25 @@
+1.kuangke SSM v1.0 是老彭用于教学而搭建的一套框架
+
+2.主要包括 Spring 3.2.0  Mybatis 2.3.6  msql数据库 
+
+3.框架配置文件: springmvc-servlet.xml
+
+4.mysql 数据库配置文件是在 springmvc-servlet <jdbcDataSource>中
+
+5.学生系统案例用到的表结构:
+-- ----------------------------
+-- Table structure for student
+-- ----------------------------
+CREATE TABLE `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL COMMENT '姓名',
+  `sex` varchar(2) DEFAULT NULL COMMENT '性别',
+  `age` varchar(2) DEFAULT NULL,
+  `memo` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+
+6.学生系统访问地址  http://localhost:8080/kuangke/student/query
+
+7.想学java开发，找老彭QQ3235097294, kuangke8.com有更多资料  2016年5月于北京
+
