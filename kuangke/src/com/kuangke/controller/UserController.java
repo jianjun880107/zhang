@@ -23,7 +23,7 @@ public class UserController {
 	public String logon(User user,Map<String, String> outMap){
 		int count= userDao.logon(user);
 		if(count>0){
-			return "redirect:/student/query"; 
+			return "redirect:/student/query";
 		}else{
 			outMap.put("msg_info", "用户名或密码错误！");
 			return "redirect:jsp/index.jsp";
