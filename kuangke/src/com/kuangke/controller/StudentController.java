@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.kuangke.asyn.MyAsyn;
 import com.kuangke.dao.StudentDao;
 import com.kuangke.domain.Student;
 
@@ -24,12 +27,12 @@ import com.kuangke.domain.Student;
  */
 public class StudentController {
 	@Resource StudentDao dao;
-	
+	private Logger logger=Logger.getLogger(MyAsyn.class);
 	//查询学生信息
 	@RequestMapping(value="query")
 	public ModelAndView query(){
-
-		System.out.println("-------查询开始------");
+		logger.info("-------查询开始------");
+		//System.out.println("-------查询开始------");
 		List<Student> student = dao.find();
 		ModelAndView model = new ModelAndView();
 		model.addObject("student",student);
