@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,11 @@ import com.kuangke.domain.Student;
  */
 public class StudentController {
 	@Resource StudentDao dao;
+	
 	//查询学生信息
 	@RequestMapping(value="query")
 	public ModelAndView query(){
+
 		System.out.println("-------查询开始------");
 		List<Student> student = dao.find();
 		ModelAndView model = new ModelAndView();

@@ -4,22 +4,24 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.apache.log4j.Logger;
 import com.mysql.jdbc.PreparedStatement;
 
 public class MyAsyn extends Thread {
-
+	//private Logger logger=Logger.getLogger(MyAsyn.class);
+	
 	@Override
 	public void run() {
 		int i=0;
 		while(true){
 			handle();
 			i++;
-			System.out.println("第"+i+"次执行扫描");
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String format = df.format(new Date());
+			//logger.debug(format+"   第"+i+"次执行扫描");
+			System.out.println(format+"   第"+i+"次执行扫描");
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
@@ -43,7 +45,7 @@ public class MyAsyn extends Thread {
         java.sql.Statement stmt = null;
         java.sql.ResultSet rs = null;
         String insql=null;
-        String upStudentSql="update student set flag='1' where id=?";
+        String upStudentSql="update student set flag ='1' where flag is null or flag =''";
         PreparedStatement pstmt=null;
         PreparedStatement psStudent=null;
         try {
@@ -54,35 +56,26 @@ public class MyAsyn extends Thread {
             // 3、获取数据库操作对象
             stmt = conn.createStatement();
             // 4、定义操作的SQL语句
-            String sql = "select * from student where flag is null or flag =''";
+            String sql = "select count(1) count from student where flag is null or flag =''";
             // 5、执行数据库操作
             rs = stmt.executeQuery(sql);
             // 6、获取并操作结果集
             while (rs.next()) {
-//                System.out.println(rs.getInt("id"));
-//                System.out.println(rs.getString("name"));
-            	  //等级控制表
-            	  insql="insert student_controller (id,name,sex,age,memo,mdtime) values(?,?,?,?,?,?)";
-            	  pstmt=(PreparedStatement) conn.prepareStatement(insql);
-            	  pstmt.setInt(1,rs.getInt("id"));
-            	  pstmt.setString(2,rs.getString("name"));
-            	  System.out.println(rs.getString("name"));
-            	  pstmt.setString(3,rs.getString("sex"));
-            	  pstmt.setString(4,rs.getString("age"));
-            	  pstmt.setString(5,rs.getString("memo"));
-            	  //获取系统时间
-            	  Date date=new Date();
-            	  SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            	  String date1=format.format(date);
-            	  pstmt.setString(6,date1);
-            	  pstmt.executeUpdate();
-            	  pstmt.close();
-            	  
-            	  //更新学生等级表flag-1已等级
-            	  psStudent=(PreparedStatement) conn.prepareStatement(upStudentSql);
-            	  psStudent.setInt(1,rs.getInt("id"));
-            	  psStudent.executeUpdate();
-            	  psStudent.close();
+            	  int count=rs.getInt("count");
+            	  if(count>0){
+            		  //等级控制表
+                	  insql="insert into student_controller(id,name,sex,age,memo,mdtime)(select id,name,sex,age,memo,date_format(now(),'%Y%m%d%H%i%s') "
+                			  +"from student where flag is null or flag='')";
+                	  pstmt=(PreparedStatement) conn.prepareStatement(insql);
+                	  pstmt.execute();
+                	  pstmt.close();
+                	  
+                	  //更新学生等级表flag-1已等级
+                	  psStudent=(PreparedStatement) conn.prepareStatement(upStudentSql);
+                	  psStudent.execute();
+                	  psStudent.close(); 
+            	  }
+            	 
             }
         } catch (Exception e) {
             e.printStackTrace();
