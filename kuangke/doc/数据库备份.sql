@@ -17,3 +17,15 @@ CREATE TABLE `sys_user` (
   `STATUS` VARCHAR(2) DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`ID`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+-- 异步备份表
+CREATE TABLE `student_controller` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(100) DEFAULT NULL COMMENT '姓名',
+  `sex` varchar(2) DEFAULT NULL COMMENT '性别',
+  `age` varchar(2) DEFAULT NULL COMMENT '年龄',
+  `memo` varchar(255) DEFAULT NULL COMMENT '备注',
+  `mdtime` varchar(20) DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
