@@ -4,22 +4,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.log4j.Logger;
+
 import com.mysql.jdbc.PreparedStatement;
 
 public class MyAsyn extends Thread {
-	//private Logger logger=Logger.getLogger(MyAsyn.class);
+	private Logger logger=Logger.getLogger(MyAsyn.class);
 	
 	@Override
 	public void run() {
 		int i=0;
 		while(true){
-			handle();
 			i++;
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String format = df.format(new Date());
-			//logger.debug(format+"   第"+i+"次执行扫描");
-			System.out.println(format+"   第"+i+"次执行扫描");
+			//logger.info("测试日志-------------");
+			logger.info(getDate()+"   第"+i+"次执行扫描");
+			handle();
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
@@ -63,6 +63,7 @@ public class MyAsyn extends Thread {
             while (rs.next()) {
             	  int count=rs.getInt("count");
             	  if(count>0){
+            		  logger.info(getDate()+"   有待处理任务！");
             		  //等级控制表
                 	  insql="insert into student_controller(id,name,sex,age,memo,mdtime)(select id,name,sex,age,memo,date_format(now(),'%Y%m%d%H%i%s') "
                 			  +"from student where flag is null or flag='')";
@@ -74,6 +75,9 @@ public class MyAsyn extends Thread {
                 	  psStudent=(PreparedStatement) conn.prepareStatement(upStudentSql);
                 	  psStudent.execute();
                 	  psStudent.close(); 
+            	  }else{
+            		  logger.info(getDate()+"   没有待处理任务，任务结束");
+            		  return;
             	  }
             	 
             }
@@ -114,5 +118,11 @@ public class MyAsyn extends Thread {
             }
         
     }
+	}
+	
+	public String getDate(){
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String format = df.format(new Date());
+		return format;
 	}
 }
